@@ -1,0 +1,4 @@
+require("vlajd")
+
+Color()
+
