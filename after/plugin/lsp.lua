@@ -1,34 +1,41 @@
-local lsp = require('lsp-zero')
-
-lsp.preset('recommended')
-
+local lsp_zero = require('lsp-zero')
 local cmp = require('cmp')
-local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local cmp_mappings = lsp.defaults.cmp_mappings({
-  ['<Up>'] = cmp.mapping.select_prev_item(cmp_select),
-  ['<Down>'] = cmp.mapping.select_next_item(cmp_select),
-  ['<Tab>'] = cmp.mapping.confirm({ select = true })
+local cmp_nvim_lsp = require('cmp_nvim_lsp')
+local mason = require('mason')
+local mason_lspconfig = require('mason-lspconfig')
+local lspconfig = require('lspconfig')
+
+lsp_zero.extend_lspconfig({
+  sign_text = true,
+  lsp_attach = function(client, bufnr)
+    lsp_zero.default_keymaps({ buffer = bufnr })
+  end,
+  capabilities = cmp_nvim_lsp.default_capabilities(),
 })
 
-vim.g.diagnostics_active = true
-  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-	vim.lsp.diagnostic.on_publish_diagnostics, {
-      virtual_text = true,
-      signs = true,
-      underline = true,
-    update_in_insert = false,
-  }
-)
-
-lsp.setup_nvim_cmp({
-  mapping = cmp_mappings
+mason.setup({})
+mason_lspconfig.setup({
+  handlers = {
+    function(server_name)
+      lspconfig[server_name].setup({})
+    end,
+  },
 })
 
-lsp.on_attach(function(client, bufnr)
-  local opts = { buffer = bufnr, remap = false }
-
-  vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, opts)
-end)
-
-lsp.setup()
+cmp.setup({
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'buffer' }
+  },
+  snippet = {
+    expand = function(args)
+      vim.snippet.expand(args.body)
+    end,
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<Up>'] = cmp.mapping.select_prev_item(cmp_select),
+    ['<Down>'] = cmp.mapping.select_next_item(cmp_select),
+    ['<Tab>'] = cmp.mapping.confirm({ select = true })
+  }),
+})
 
