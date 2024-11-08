@@ -1,0 +1,3 @@
+local glow = require("glow")
+glow.setup({ install_path = "~/AppData/Local/nvim-data/glow", type = "panel" })
+

@@ -18,8 +18,8 @@ mason_lspconfig.setup({
   handlers = {
     function(server_name)
       lspconfig[server_name].setup({})
-    end,
-  },
+    end
+  }
 })
 
 cmp.setup({
@@ -35,7 +35,8 @@ cmp.setup({
   mapping = cmp.mapping.preset.insert({
     ['<Up>'] = cmp.mapping.select_prev_item(cmp_select),
     ['<Down>'] = cmp.mapping.select_next_item(cmp_select),
-    ['<Tab>'] = cmp.mapping.confirm({ select = true })
+    ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+    ['<Enter>'] = cmp.mapping.confirm({ select = true })
   }),
 })
 

@@ -30,6 +30,13 @@ return require('packer').startup(function(use)
     }
   }
 
-  use( 'feline-nvim/feline.nvim' )
+  use 'feline-nvim/feline.nvim'
+
+  -- Markdown Preview
+  -- use 'vlajd/glow.nvim'
+  use({
+    "iamcco/markdown-preview.nvim",
+    run = function() vim.fn["mkdp#util#install"]() end,
+  })
 end)
 
